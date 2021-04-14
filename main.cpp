@@ -110,19 +110,26 @@ void predictions_to_csv() {
     int v = 1000, presicion = 500, connectivity_counter = 0, diameter_counter = 0, is_isolated_counter = 0, progress;
     double treshhold1 = (log(v)) / v, treshhold2 = sqrt((2 * log(v)) / v);
     std::ofstream file("graph probability.csv");
+//    file.open("graph probability.csv");
     for (int condition = 1; condition <= 3; condition++) {
         progress = 0;
         std::cout << "Condition " << condition << std::endl;
         if (condition == 1) {
             file << "Connectivity,";
+            file<<"\n";
             file << "p,";
             for (double p = ((treshhold1 / 5) - (treshhold1 / 10)); p < 2 * treshhold1; p += treshhold1 / 5) {
                 file << std::to_string(p) << ",";
+            }
+            file << "\n";
+            file<<"Probabilistic assessment"<<",";
+            for (double p = ((treshhold1 / 5) - (treshhold1 / 10)); p < 2 * treshhold1; p += treshhold1 / 5) {
                 connectivity_counter = 0;
                 for (int i = 0; i < presicion; i++) {
                     std::set<vertex *> graph = create_graph(v, p);
                     if ((p < treshhold1) ^ connectivity(graph)) {
                         connectivity_counter++;
+
                     }
                     for (std::set<vertex *>::iterator j = graph.begin(); j != graph.end(); j++) {
                         delete *j;
@@ -130,19 +137,26 @@ void predictions_to_csv() {
                     if (!(i % (50)))
                         std::cout << "\r" << ++progress << "%";
                 }
+
                 file << (double) connectivity_counter / presicion << ",";
             }
+            file << "\n";
         }
         if (condition == 2) {
 
             file << "Diameter,";
+            file<<"\n";
             file << "p,";
             for (double p = ((treshhold2 / 5) - (treshhold2 / 10)); p < 2 * treshhold2; p += treshhold2 / 5) {
                 file << std::to_string(p) << ",";
+            }
+            file << "\n";
+            file<<"Probabilistic assessment"<<",";
+            for (double p = ((treshhold2 / 5) - (treshhold2 / 10)); p < 2 * treshhold2; p += treshhold2 / 5) {
                 diameter_counter = 0;
                 for (int i = 0; i < presicion; i++) {
                     std::set<vertex *> graph = create_graph(v, p);
-                    if(connectivity(graph)){
+                    if (connectivity(graph)) {
                         if ((p < treshhold2) ^ (diameter(graph) == 2)) {
                             diameter_counter++;
                         }
@@ -155,13 +169,19 @@ void predictions_to_csv() {
                 }
                 file << (double) diameter_counter / presicion << ",";
             }
+            file << "\n";
         }
         if (condition == 3) {
 
             file << "Is Isolated,";
+            file<<"\n";
             file << "p,";
             for (double p = ((treshhold1 / 5) - (treshhold1 / 10)); p < 2 * treshhold1; p += treshhold1 / 5) {
                 file << std::to_string(p) << ",";
+            }
+            file << "\n";
+            file<<"Probabilistic assessment"<<",";
+            for (double p = ((treshhold1 / 5) - (treshhold1 / 10)); p < 2 * treshhold1; p += treshhold1 / 5) {
                 is_isolated_counter = 0;
                 for (int i = 0; i < presicion; i++) {
                     std::set<vertex *> graph = create_graph(v, p);
@@ -176,9 +196,12 @@ void predictions_to_csv() {
                 }
                 file << (double) is_isolated_counter / presicion << ",";
             }
+            file << "\n";
         }
     }
+
     file.close();
+
 }
 
 int main() {
